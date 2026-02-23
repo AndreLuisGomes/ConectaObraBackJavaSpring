@@ -1,4 +1,4 @@
 package com.conectaobra.common;
 
-public class ErrorFields {
+public record ErrorFields (String campo, String mensagem){
 }

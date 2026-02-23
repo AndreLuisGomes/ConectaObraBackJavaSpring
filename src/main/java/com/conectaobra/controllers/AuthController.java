@@ -49,10 +49,6 @@ public class AuthController {
     @PostMapping("logar")
     ResponseEntity<Object> logar(@RequestBody @Valid UsuarioLoginDTO usuarioLoginDTO){
 
-        // Verificar se os campos não são nulos \\
-        if(!usuarioService.camposLoginCorretos(usuarioLoginDTO)){
-            return ResponseEntity.status(400).body("Campo usuário ou senha não podem ser vazios!");
-        }
         UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO(usuarioLoginDTO.nome().trim(), usuarioLoginDTO.senha());
 
         // Verificar se os dados batem \\
@@ -75,7 +71,7 @@ public class AuthController {
     // Método de registrar \\
 
     @PostMapping("registrar")
-    ResponseEntity<Object> registrar(@RequestBody UsuarioDTO usuarioDTO){
+    ResponseEntity<Object> registrar(@RequestBody @Valid UsuarioDTO usuarioDTO){
         Optional<Usuario> usuario = this.usuarioService.obterPorNome(usuarioDTO.nome());
         Optional<Role> role = this.roleService.obterPorId(usuarioDTO.role().getId());
 

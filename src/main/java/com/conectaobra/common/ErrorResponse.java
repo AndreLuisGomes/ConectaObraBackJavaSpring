@@ -1,4 +1,6 @@
 package com.conectaobra.common;
 
-public class ErrorResponse {
+import java.util.List;
+
+public record ErrorResponse (int status, List<ErrorFields> erros){
 }

@@ -1,5 +1,8 @@
 package com.conectaobra.controllers;
 
+import com.conectaobra.common.exceptions.NomeIndisponivelException;
+import com.conectaobra.common.exceptions.RoleInexistenteException;
+import com.conectaobra.common.exceptions.UsuarioSenhaInvalidosException;
 import com.conectaobra.dtos.AuthResponse;
 import com.conectaobra.dtos.UsuarioDTO;
 import com.conectaobra.dtos.UsuarioLoginDTO;
@@ -8,7 +11,9 @@ import com.conectaobra.models.Usuario;
 import com.conectaobra.services.RoleService;
 import com.conectaobra.services.UsuarioService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +52,7 @@ public class AuthController {
     // Método de login \\
 
     @PostMapping("logar")
-    ResponseEntity<Object> logar(@RequestBody @Valid UsuarioLoginDTO usuarioLoginDTO){
+    ResponseEntity<Object> logar(@RequestBody @Valid UsuarioLoginDTO usuarioLoginDTO) throws Exception{
 
         UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO(usuarioLoginDTO.nome().trim(), usuarioLoginDTO.senha());
 
@@ -65,18 +70,18 @@ public class AuthController {
                     usuarioDoBanco.get().getRole().getNome()
                     ));
         }
-        return ResponseEntity.status(401).body("Usuário ou senha inválidos!");
+        throw new UsuarioSenhaInvalidosException("Usuário ou senha inválidos!");
     }
 
     // Método de registrar \\
 
     @PostMapping("registrar")
     ResponseEntity<Object> registrar(@RequestBody @Valid UsuarioDTO usuarioDTO){
-        Optional<Usuario> usuario = this.usuarioService.obterPorNome(usuarioDTO.nome());
+        Optional<Usuario> usuario = this.usuarioService.obterPorNome(usuarioDTO.nome().trim());
         Optional<Role> role = this.roleService.obterPorId(usuarioDTO.role().getId());
 
         if(role.isEmpty()){
-            return ResponseEntity.status(400).body("Role inválida ou não existe!");
+            throw new RoleInexistenteException("Role inválida ou não existe!", "role.id");
         }
         if(usuario.isEmpty()){
             Usuario novoUsuario = usuarioDTO.mapearParaUsuario();
@@ -90,7 +95,7 @@ public class AuthController {
                             this.gerarJWT(novoUsuario, this.AUTH_REFRESH_TOKEN).getTokenValue(),
                             novoUsuario.getRole().getNome()));
         }
-        return ResponseEntity.status(409).body("Nome já está em uso!");
+        throw new NomeIndisponivelException("Nome indisponível!", "nome");
     }
 
     // Método para gerar JWT \\

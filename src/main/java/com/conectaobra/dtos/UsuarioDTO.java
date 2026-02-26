@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 public record UsuarioDTO(
-        @NotBlank(message = "Não pode ser vazio") @Length(min = 3, max = 25, message = "Deve ter entre 3 e 25 caracteres") String nome,
-        @NotBlank(message = "Não pode ser vazio") @Length(min = 6, max = 50)  String senha,
+        @NotBlank(message = "Campo obrigatório!") @Length(min = 3, max = 25, message = "Deve ter entre 3 e 25 caracteres") String nome,
+        @NotBlank(message = "Campo obrigatório!") @Length(min = 6, max = 50, message = "O comprimento deve ser entre 6 e 50 caracteres!")  String senha,
         @Valid Role role){
 
     public Usuario mapearParaUsuario(){

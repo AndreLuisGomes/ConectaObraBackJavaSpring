@@ -14,11 +14,10 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
-    @NotNull(message = "Não pode ser nulo")
-    @Min(value = 1, message = "Tem que possui um valor igual ou superior a 1")
+    @NotNull(message = "Campo obrigatório!")
+    @Min(value = 1, message = "Deve possuir um valor igual ou superior a 1!")
     private Long id;
 
     @Column(unique = true,name = "nome")
-    @NotBlank(message = "Não pode ser vazio")
     private String nome;
 }

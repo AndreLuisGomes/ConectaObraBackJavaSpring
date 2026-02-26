@@ -1,5 +1,11 @@
 package com.conectaobra.common.exceptions;
 
 public class RoleInexistenteException extends RuntimeException{
-    public RoleInexistenteException(String message){super(message);}
+
+    public String campo;
+
+    public RoleInexistenteException(String message, String campo){
+        super(message);
+        this.campo = campo;
+        ;}
 }

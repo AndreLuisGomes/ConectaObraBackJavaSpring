@@ -32,14 +32,14 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 e.getMessage(),
-                new ArrayList<>());
+                new ArrayList<>(Collections.singleton(new ErrorFields(e.campo, e.getMessage()))));
     }
 
     @ExceptionHandler(UsuarioSenhaInvalidosException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse UsuarioSenhaInvalidos(UsuarioSenhaInvalidosException e){
         return new ErrorResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 new ArrayList<>());
     }
@@ -59,7 +59,6 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(),
-                new ArrayList<ErrorFields>()
-                );
+                new ArrayList<>());
     }
 }

@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UsuarioLoginDTO(
-        @NotBlank(message = "Não pode ser vazio") String nome,
-        @NotNull(message = "Não pode ser vazio") String senha) {
+        @NotBlank(message = "Campo obrigatório!") String nome,
+        @NotNull(message = "Campo obrigatório!") String senha) {
 }

@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -48,7 +49,7 @@ public class SecurityFilter {
                         .anyRequest().authenticated();
                 })
                 .cors(Customizer.withDefaults())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwtAuthenticationConverter()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
@@ -68,19 +69,6 @@ public class SecurityFilter {
         return source;
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.addAllowedOriginPattern("*"); // permite http://localhost:4200
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//        config.setAllowCredentials(false);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config);
-//        return source;
-//    }
-
     // ===================== PASSWORD ENCODER ===================== //
 
     @Bean
@@ -88,17 +76,10 @@ public class SecurityFilter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
-        return authConfig.getAuthenticationManager();
-    }
-
     // =================== JWT BEANS =================== //
-
 
     @Value("${jwt.private.key}")
     private Resource privateKey;
-
 
     @Value("${jwt.public.key}")
     private Resource publicKey;
@@ -139,6 +120,15 @@ public class SecurityFilter {
         converter.setAuthoritiesClaimName("roles");
         converter.setAuthorityPrefix("");
 
+        return converter;
+    }
+
+    // JWTAuthenticationConverter \\
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter(){
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(this.jwtGrantedAuthoritiesConverter());
         return converter;
     }
 }

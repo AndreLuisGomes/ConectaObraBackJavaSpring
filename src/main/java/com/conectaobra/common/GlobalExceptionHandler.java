@@ -1,9 +1,9 @@
 package com.conectaobra.common;
 
-import com.conectaobra.common.exceptions.NomeIndisponivelException;
-import com.conectaobra.common.exceptions.RoleInexistenteException;
-import com.conectaobra.common.exceptions.UsuarioSenhaInvalidosException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import com.conectaobra.exceptions.ErroJWTException;
+import com.conectaobra.exceptions.NomeIndisponivelException;
+import com.conectaobra.exceptions.RoleInexistenteException;
+import com.conectaobra.exceptions.UsuarioSenhaInvalidosException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -60,5 +60,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(),
                 new ArrayList<>());
+    }
+
+    @ExceptionHandler(ErroJWTException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse ErroJWTException(ErroJWTException e){
+        return new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                e.getMessage(),
+                new ArrayList<>()
+                );
     }
 }

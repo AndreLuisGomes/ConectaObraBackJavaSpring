@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,8 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     // Metódos para obter \\
+
+    public List<Role> obterTodas(){return this.roleRepository.findAll();};
 
     public Optional<Role> obterPorId(Long id){
         return this.roleRepository.findById(id);

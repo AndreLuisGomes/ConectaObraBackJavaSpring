@@ -44,6 +44,7 @@ public class SecurityFilter {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizer -> { authorizer
                         .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/roles/listar").permitAll()
                         .anyRequest().authenticated();
                 })
                 .cors(Customizer.withDefaults())

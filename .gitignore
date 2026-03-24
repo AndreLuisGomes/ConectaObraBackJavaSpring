@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 **/src/main/resources/api.pub
 **/src/main/resources/api.key
+**/.env
 
 ### STS ###
 .apt_generated

@@ -3,6 +3,7 @@ package com.conectaobra.controllers;
 import com.conectaobra.dtos.GuiaDTO;
 import com.conectaobra.models.Guia;
 import com.conectaobra.services.GuiaService;
+import jakarta.validation.Valid;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +24,10 @@ public class GuiaController {
     public List<Guia> obterGuias(
             @RequestParam(value = "local", required = false) String local,
             @RequestParam(value = "nome", required = false) String nome,
-            @RequestParam(value = "nomeCliente", required = false) UUID nomeCliente
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "nomeCliente", required = false) String nomeCliente
             ){
-        GuiaDTO guiaDTO = new GuiaDTO(local, nome, nomeCliente);
-        return guiaService.obterGuiaPorParametros(guiaDTO);
+        return guiaService.obterGuiaPorParametros(nome, status, nomeCliente, local);
     }
 
     @GetMapping("/{nome}")
@@ -35,7 +36,7 @@ public class GuiaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> salvarGuia(@RequestBody GuiaDTO guiaDTO){
+    public ResponseEntity<Void> salvarGuia(@RequestBody @Valid GuiaDTO guiaDTO){
 
         Guia guia = guiaDTO.mapearParaGuia();
         guiaService.salvarGuia(guia);

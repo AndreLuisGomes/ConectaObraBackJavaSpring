@@ -14,11 +14,11 @@ public class Guia {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String local;
+    private String nome;
 
     private String status;
 
-    private String nome;
+    private String local;
 
     private UUID clienteId;
 }

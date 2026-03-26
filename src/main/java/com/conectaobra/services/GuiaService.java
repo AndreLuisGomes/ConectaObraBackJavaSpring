@@ -24,20 +24,24 @@ public class GuiaService {
 
     // Métodos para obter \\
 
-    public List<Guia> obterGuiaPorParametros(GuiaDTO guiaDTO){
+    public List<Guia> obterGuiaPorParametros(String nome, String status, String nomeCliente, String local){
 
         Specification<Guia> specs = Specification.where(null);
 
-        if(StringUtils.hasText(guiaDTO.nome())){
-            specs = specs.and(GuiaSpecs.nomeLike(String.valueOf(guiaDTO.clienteId())));
+        if(StringUtils.hasText(nome)){
+            specs = specs.and(GuiaSpecs.nomeLike(String.valueOf(nome)));
         }
 
-        if(StringUtils.hasText(guiaDTO.local())){
-            specs = specs.and(GuiaSpecs.localLike(guiaDTO.local()));
+        if(StringUtils.hasText(status)){
+            specs = specs.and(GuiaSpecs.localLike(status));
         }
 
-        if (StringUtils.hasText(String.valueOf(guiaDTO.clienteId()))) {
-            specs = specs.and(GuiaSpecs.nomeClienteLike(String.valueOf(guiaDTO.clienteId())));
+        if (StringUtils.hasText(String.valueOf(nomeCliente))) {
+            specs = specs.and(GuiaSpecs.nomeClienteLike(String.valueOf(nomeCliente)));
+        }
+
+        if (StringUtils.hasText(String.valueOf(local))) {
+            specs = specs.and(GuiaSpecs.nomeClienteLike(String.valueOf(local)));
         }
 
         return guiaRepository.findAll();

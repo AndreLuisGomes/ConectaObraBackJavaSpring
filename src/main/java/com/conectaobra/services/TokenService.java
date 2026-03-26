@@ -44,12 +44,12 @@ public class TokenService {
 
     @Bean
     public final long AUTH_TOKEN(){
-        return 10L;
+        return 10000L;
     }
 
     // Método para validar RefreshToken \\
 
-    public RefreshTokenResponse validarJWT(RefreshToken token){
+    public RefreshTokenResponse validarJWT(RefreshToken token, long exp){
            try{
                SignedJWT signedJWT = SignedJWT.parse(token.refreshToken());
                JWSVerifier verifier = new RSASSAVerifier(rsaPublicKey);
@@ -69,7 +69,7 @@ public class TokenService {
                    return new RefreshTokenResponse(
                            this.gerarJWT(
                                    usuario.get(),
-                                   AUTH_TOKEN()
+                                   exp
                            ).getTokenValue(),
                            this.gerarJWT(
                                    usuario.get(),

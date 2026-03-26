@@ -47,7 +47,7 @@ public class AuthController {
     @PostMapping("refresh-token")
     ResponseEntity<Object> refreshToken(@RequestBody @Valid RefreshToken refreshToken){
         System.out.println("AuthController -> refreshToken : Passando pelo refreshToken");
-        RefreshTokenResponse authToken = this.tokenService.validarJWT(refreshToken);
+        RefreshTokenResponse authToken = this.tokenService.validarJWT(refreshToken, AUTH_TOKEN);
         return authToken != null ? ResponseEntity.ok().body(authToken) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Deu errado" + authToken);
     }
 

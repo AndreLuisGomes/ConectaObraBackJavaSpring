@@ -11,7 +11,7 @@ import lombok.Data;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "role_id")
     @NotNull(message = "Campo obrigatório!")
     @Min(value = 1, message = "Deve possuir um valor igual ou superior a 1!")

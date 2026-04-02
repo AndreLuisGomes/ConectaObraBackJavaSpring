@@ -10,5 +10,7 @@ public interface GuiaRepository extends JpaRepository<Guia, UUID> {
 
     Optional<Guia> findById(UUID uuid);
 
-    Guia findByNome(String nome);
+    Optional<Guia> findByNome(String nome);
+
+    Optional<Guia> findByNomeAndClienteId(String nome, UUID clienteId);
 }

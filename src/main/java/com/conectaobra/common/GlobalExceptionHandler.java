@@ -1,9 +1,6 @@
 package com.conectaobra.common;
 
-import com.conectaobra.exceptions.ErroJWTException;
-import com.conectaobra.exceptions.NomeIndisponivelException;
-import com.conectaobra.exceptions.RoleInexistenteException;
-import com.conectaobra.exceptions.UsuarioSenhaInvalidosException;
+import com.conectaobra.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -70,5 +67,15 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 new ArrayList<>()
                 );
+    }
+
+    @ExceptionHandler(GuiaInvalidaException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse GuiaInvalida(GuiaInvalidaException e){
+        return new ErrorResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                e.getMessage(),
+                new ArrayList<>()
+        );
     }
 }

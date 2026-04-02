@@ -1,6 +1,7 @@
 package com.conectaobra.controllers;
 
 import com.conectaobra.dtos.GuiaDTO;
+import com.conectaobra.models.Cliente;
 import com.conectaobra.models.Guia;
 import com.conectaobra.services.GuiaService;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -31,14 +33,16 @@ public class GuiaController {
     }
 
     @GetMapping("/{nome}")
-    public Guia obterGuia(@RequestParam(required = false, name ="nome") String nome){
+    public Optional<Guia> obterGuia(@RequestParam(required = false, name ="nome") String nome){
         return guiaService.obterGuiaPorNome(nome);
     }
 
     @PostMapping
     public ResponseEntity<Void> salvarGuia(@RequestBody @Valid GuiaDTO guiaDTO){
 
-        Guia guia = guiaDTO.mapearParaGuia();
+        Optional<Cliente> cliente = this.guiaService.guiaEstaValida(guiaDTO);
+
+        Guia guia = guiaDTO.mapearParaGuia(cliente.get());
         guiaService.salvarGuia(guia);
 
         URI uri = ServletUriComponentsBuilder

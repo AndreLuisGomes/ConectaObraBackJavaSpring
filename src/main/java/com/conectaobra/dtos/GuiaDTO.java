@@ -1,8 +1,9 @@
 package com.conectaobra.dtos;
 
+import com.conectaobra.models.Cliente;
 import com.conectaobra.models.Guia;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.UUID;
@@ -10,15 +11,15 @@ import java.util.UUID;
 public record GuiaDTO(
                         @NotBlank @Length(min = 3, max = 40) String nome,
                         @NotBlank String status,
-                        @NotBlank String local,
-                        @NotBlank UUID nomeCliente) {
+                        @NotBlank String clienteId,
+                        @NotBlank String local) {
 
-    public Guia mapearParaGuia(){
+    public Guia mapearParaGuia(Cliente cliente){
         Guia guia = new Guia();
-        guia.setLocal(local);
         guia.setNome(nome);
+        guia.setStatus(status);
+        guia.setCliente(cliente);
         guia.setLocal(local);
-        guia.setClienteId(nomeCliente);
         return guia;
     }
 }

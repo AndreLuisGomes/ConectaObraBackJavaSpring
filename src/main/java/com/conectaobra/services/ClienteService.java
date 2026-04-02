@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,10 @@ public class ClienteService {
 
     public List<Cliente> obterClientes(){
         return clienteRepository.findAll();
+    }
+
+    public Optional<Cliente> obterClientePorId(UUID clienteId){
+        return this.clienteRepository.findById(clienteId);
     }
 
     public List<Cliente> obterClientesPorNome(String nome){

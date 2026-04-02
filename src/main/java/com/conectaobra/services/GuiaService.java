@@ -1,6 +1,8 @@
 package com.conectaobra.services;
 
 import com.conectaobra.dtos.GuiaDTO;
+import com.conectaobra.exceptions.GuiaInvalidaException;
+import com.conectaobra.models.Cliente;
 import com.conectaobra.models.Guia;
 import com.conectaobra.repositories.GuiaRepository;
 import com.conectaobra.repositories.specs.GuiaSpecs;
@@ -21,6 +23,21 @@ public class GuiaService {
     // Dependências \\
 
     private final GuiaRepository guiaRepository;
+    private final ClienteService clienteService;
+
+    // Métodos de verificação \\
+
+    public Optional<Cliente> guiaEstaValida(GuiaDTO guiaDTO){
+        Optional<Cliente> cliente = this.clienteService.obterClientePorId(UUID.fromString(guiaDTO.clienteId()));
+        if(cliente.isEmpty()){
+           throw new GuiaInvalidaException("Cliente não existe!");
+        }
+        if(this.guiaRepository.findByNomeAndClienteId(guiaDTO.nome(), UUID.fromString(guiaDTO.clienteId())).isPresent()){
+            throw new GuiaInvalidaException("Já existe uma guia com este nome para este cliente!");
+        }
+        Optional<Guia> guia = this.guiaRepository.findByNome(guiaDTO.nome());
+        return cliente;
+    }
 
     // Métodos para obter \\
 
@@ -47,7 +64,7 @@ public class GuiaService {
         return guiaRepository.findAll();
     }
 
-    public Guia obterGuiaPorNome(String nome){
+    public Optional<Guia> obterGuiaPorNome(String nome){
         return guiaRepository.findByNome(nome);
     }
 

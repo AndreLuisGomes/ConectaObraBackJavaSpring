@@ -20,5 +20,6 @@ public class Guia {
 
     private String local;
 
-    private UUID clienteId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Cliente cliente;
 }

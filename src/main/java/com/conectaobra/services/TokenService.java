@@ -44,7 +44,7 @@ public class TokenService {
 
     @Bean
     public final long AUTH_TOKEN(){
-        return 10000L;
+        return 180L;
     }
 
     // Método para validar RefreshToken \\

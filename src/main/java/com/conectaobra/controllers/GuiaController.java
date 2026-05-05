@@ -29,6 +29,11 @@ public class GuiaController {
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "nomeCliente", required = false) String nomeCliente
             ){
+        if (local == null && nome == null && status == null && nomeCliente == null){
+            System.out.println("Foi para obterTodasAsGuias sem parâmetros!");
+            return guiaService.obterTodasAsGuias();
+        }
+        System.out.println("Foi para obterTodasAsGuias com parâmetros!");
         return guiaService.obterGuiaPorParametros(nome, status, nomeCliente, local);
     }
 

@@ -76,8 +76,9 @@ public class TokenService {
                                    signedJWT.getJWTClaimsSet().getExpirationTime().getTime()
                            ).getTokenValue()
                    );
+               }else{
+                    System.out.println("Token chegou no final");
                }
-               System.out.println("Token chegou no final");
            } catch (ParseException | JOSEException e) {
                throw new ErroJWTException("Token com assinatura inválida ou inválido!");
            }

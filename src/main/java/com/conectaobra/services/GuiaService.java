@@ -9,6 +9,7 @@ import com.conectaobra.repositories.specs.GuiaSpecs;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -40,6 +41,10 @@ public class GuiaService {
     }
 
     // Métodos para obter \\
+
+    public List<Guia> obterTodasAsGuias(){
+        return this.guiaRepository.findAll();
+    }
 
     public List<Guia> obterGuiaPorParametros(String nome, String status, String nomeCliente, String local){
 

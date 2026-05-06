@@ -24,10 +24,8 @@ public class Usuario{
     private String senha;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_role",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+    @JoinColumn(
+            name = "role_id"
     )
     private Role role;
 }

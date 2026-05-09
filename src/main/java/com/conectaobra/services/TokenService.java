@@ -3,6 +3,7 @@ package com.conectaobra.services;
 import com.conectaobra.dtos.RefreshToken;
 import com.conectaobra.dtos.RefreshTokenResponse;
 import com.conectaobra.exceptions.ErroJWTException;
+import com.conectaobra.exceptions.UsuarioNaoEncontrado;
 import com.conectaobra.models.Usuario;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
@@ -30,6 +31,9 @@ public class TokenService {
 
     private final String API_NAME;
 
+    private static final long ACESS_TOKEN_EXP = 180L;
+    private static final long REFRESH_TOKEN_EXP = 86400L;
+
     private final RSAPublicKey rsaPublicKey;
 
     private final JwtEncoder jwtEncoder;
@@ -53,7 +57,7 @@ public class TokenService {
            try{
                SignedJWT signedJWT = SignedJWT.parse(token.refreshToken());
                JWSVerifier verifier = new RSASSAVerifier(rsaPublicKey);
-               System.out.println("Token foi verificado." + token.refreshToken());
+               System.out.println("Token foi verificado. Token: " + token.refreshToken());
                if(!signedJWT.verify(verifier)){
                    System.out.println("Token nao passou no teste de verificacao");
                    throw new ErroJWTException("Token Assinado Errôneamente!");
@@ -62,17 +66,18 @@ public class TokenService {
                Instant expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
 
                String nomeUsuario = signedJWT.getJWTClaimsSet().getSubject();
-               Optional<Usuario> usuario =  this.usuarioService.obterPorId(UUID.fromString(nomeUsuario));
+               Usuario usuario =  this.usuarioService.obterPorId(UUID.fromString(nomeUsuario)).orElseThrow(
+                       () -> new UsuarioNaoEncontrado("Usuário não encontrado!"));
 
-               if (expirationTime.isAfter(Instant.now()) && usuario.isPresent()){
+               if (expirationTime.isAfter(Instant.now()) && (usuario != null)){
                    System.out.println("Token esta sendo gerado");
                    return new RefreshTokenResponse(
                            this.gerarJWT(
-                                   usuario.get(),
+                                   usuario,
                                    exp
                            ).getTokenValue(),
                            this.gerarJWT(
-                                   usuario.get(),
+                                   usuario,
                                    signedJWT.getJWTClaimsSet().getExpirationTime().getTime()
                            ).getTokenValue()
                    );

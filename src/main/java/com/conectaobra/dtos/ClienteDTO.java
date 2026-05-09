@@ -2,9 +2,10 @@ package com.conectaobra.dtos;
 
 import com.conectaobra.models.Cliente;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public record ClienteDTO(@NotBlank String nome,
-                         @NotBlank String contato,
+                         @NotBlank @Length(min = 11) String contato,
                          @NotBlank String localizacaoSede) {
 
     public Cliente mapearParaCliente(){

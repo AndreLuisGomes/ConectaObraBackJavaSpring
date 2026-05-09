@@ -14,5 +14,5 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID>, JpaSpec
 
     List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
-
+    List<Cliente> findByContato(String contato);
 }

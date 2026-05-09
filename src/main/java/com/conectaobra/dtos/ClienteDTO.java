@@ -1,14 +1,17 @@
 package com.conectaobra.dtos;
 
 import com.conectaobra.models.Cliente;
+import jakarta.validation.constraints.NotBlank;
 
-public record ClienteDTO(String nome, String contato, String localizacaoSede) {
+public record ClienteDTO(@NotBlank String nome,
+                         @NotBlank String contato,
+                         @NotBlank String localizacaoSede) {
 
     public Cliente mapearParaCliente(){
         Cliente cliente = new Cliente();
-        cliente.setNome(this.nome);
-        cliente.setContato(this.contato);
-        cliente.setLocalizacaoSede(this.localizacaoSede);
+        cliente.setNome(this.nome.trim());
+        cliente.setContato(this.contato.trim());
+        cliente.setLocalizacaoSede(this.localizacaoSede.trim());
         return cliente;
     }
 }

@@ -1,8 +1,11 @@
 package com.conectaobra.controllers;
 
 import com.conectaobra.dtos.ClienteDTO;
+import com.conectaobra.exceptions.ContatoClienteEmUso;
+import com.conectaobra.exceptions.NomeClienteEmUso;
 import com.conectaobra.models.Cliente;
 import com.conectaobra.services.ClienteService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +36,13 @@ public class ClienteController {
 
 //    @PreAuthorize("hasAnyRole('SCOPE_admin')")
     @PostMapping
-    public ResponseEntity<Cliente> salvarCliente(@RequestBody ClienteDTO clienteDTO){
+    public ResponseEntity<Cliente> salvarCliente(@RequestBody @Valid ClienteDTO clienteDTO){
+        if(!clienteService.nomeClienteValido(clienteDTO.nome().trim())){
+            throw new NomeClienteEmUso("Nome do Cliente já está em uso!");
+        }
+        if(!clienteService.contatoClienteValido(clienteDTO.contato().trim())){
+            throw new ContatoClienteEmUso("Contato do Cliente já está em uso!");
+        }
         Cliente cliente = clienteDTO.mapearParaCliente();
         clienteService.salvarCliente(cliente);
         URI uri = ServletUriComponentsBuilder

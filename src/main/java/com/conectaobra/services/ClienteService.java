@@ -1,6 +1,7 @@
 package com.conectaobra.services;
 
 import com.conectaobra.dtos.ClienteDTO;
+import com.conectaobra.exceptions.NomeClienteEmUso;
 import com.conectaobra.models.Cliente;
 import com.conectaobra.repositories.ClienteRepository;
 import com.conectaobra.repositories.specs.ClienteSpecs;
@@ -21,6 +22,18 @@ public class ClienteService {
     // Dependências \\
 
     private final ClienteRepository clienteRepository;
+
+    // Métodos para validação \\
+
+    public boolean nomeClienteValido(String clienteNome){
+        List<Cliente> clienteDoBanco = this.clienteRepository.findByNomeContainingIgnoreCase(clienteNome);
+        return clienteDoBanco.isEmpty();
+    }
+
+    public boolean contatoClienteValido(String clienteContato){
+        List<Cliente> clienteDoBanco = this.clienteRepository.findByContato(clienteContato);
+        return clienteDoBanco.isEmpty();
+    }
 
     // Métodos para obter \\
 

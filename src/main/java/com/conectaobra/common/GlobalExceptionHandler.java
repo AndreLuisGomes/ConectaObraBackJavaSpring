@@ -1,7 +1,9 @@
 package com.conectaobra.common;
 
 import com.conectaobra.exceptions.*;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -77,5 +79,17 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 new ArrayList<>()
         );
+    }
+
+    @ExceptionHandler(NomeClienteEmUso.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> NomeClienteEmUso(NomeClienteEmUso e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ContatoClienteEmUso.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> ContatoClienteEmUso(NomeClienteEmUso e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 }

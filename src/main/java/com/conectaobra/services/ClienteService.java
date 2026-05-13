@@ -1,7 +1,6 @@
 package com.conectaobra.services;
 
 import com.conectaobra.dtos.ClienteDTO;
-import com.conectaobra.exceptions.NomeClienteEmUso;
 import com.conectaobra.models.Cliente;
 import com.conectaobra.repositories.ClienteRepository;
 import com.conectaobra.repositories.specs.ClienteSpecs;

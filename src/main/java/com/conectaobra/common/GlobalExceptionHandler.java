@@ -1,7 +1,6 @@
 package com.conectaobra.common;
 
 import com.conectaobra.exceptions.*;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -81,15 +80,15 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NomeClienteEmUso.class)
+    @ExceptionHandler(NomeClienteEmUsoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> NomeClienteEmUso(NomeClienteEmUso e){
+    public ResponseEntity<String> NomeClienteEmUso(NomeClienteEmUsoException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
-    @ExceptionHandler(ContatoClienteEmUso.class)
+    @ExceptionHandler(ContatoClienteEmUsoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> ContatoClienteEmUso(NomeClienteEmUso e){
+    public ResponseEntity<String> ContatoClienteEmUso(ContatoClienteEmUsoException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 }

@@ -3,7 +3,8 @@ package com.conectaobra.services;
 import com.conectaobra.dtos.RefreshToken;
 import com.conectaobra.dtos.RefreshTokenResponse;
 import com.conectaobra.exceptions.ErroJWTException;
-import com.conectaobra.exceptions.UsuarioNaoEncontrado;
+import com.conectaobra.exceptions.TokenExpiradoException;
+import com.conectaobra.exceptions.UsuarioNaoEncontradoException;
 import com.conectaobra.models.Usuario;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -51,9 +51,14 @@ public class TokenService {
         return 180L;
     }
 
+    @Bean
+    public final String TOKEN_TYPE(){
+        return "Bearer ";
+    }
+
     // Método para validar RefreshToken \\
 
-    public RefreshTokenResponse validarJWT(RefreshToken token, long exp){
+    public RefreshTokenResponse validarJWT(RefreshToken token){
            try{
                SignedJWT signedJWT = SignedJWT.parse(token.refreshToken());
                JWSVerifier verifier = new RSASSAVerifier(rsaPublicKey);
@@ -67,27 +72,28 @@ public class TokenService {
 
                String nomeUsuario = signedJWT.getJWTClaimsSet().getSubject();
                Usuario usuario =  this.usuarioService.obterPorId(UUID.fromString(nomeUsuario)).orElseThrow(
-                       () -> new UsuarioNaoEncontrado("Usuário não encontrado!"));
+                       () -> new UsuarioNaoEncontradoException("Usuário não encontrado!"));
 
                if (expirationTime.isAfter(Instant.now()) && (usuario != null)){
-                   System.out.println("Token esta sendo gerado");
+                   System.out.println("Token esta sendo gerado: \n");
+                   long refresh_exp = expirationTime.getEpochSecond() - Instant.now().getEpochSecond();
+                   refresh_exp = Math.max(0, refresh_exp);
                    return new RefreshTokenResponse(
                            this.gerarJWT(
                                    usuario,
-                                   exp
+                                   AUTH_TOKEN()
                            ).getTokenValue(),
                            this.gerarJWT(
                                    usuario,
-                                   signedJWT.getJWTClaimsSet().getExpirationTime().getTime()
+                                   refresh_exp
                            ).getTokenValue()
                    );
                }else{
-                    System.out.println("Token chegou no final");
+                    throw new TokenExpiradoException("Token expirado!");
                }
            } catch (ParseException | JOSEException e) {
                throw new ErroJWTException("Token com assinatura inválida ou inválido!");
            }
-           throw new ErroJWTException("Erro desconhecido!");
     }
 
     // Método para gerar JWT \\

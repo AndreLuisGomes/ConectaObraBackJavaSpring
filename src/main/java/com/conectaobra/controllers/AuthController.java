@@ -40,15 +40,15 @@ public class AuthController {
 
     public final long AUTH_TOKEN;
     public final long AUTH_REFRESH_TOKEN;
-    public final String TOKEN_TYPE = "Bearer ";
+    public final String TOKEN_TYPE;
 
     // Método de login \\
 
     @PostMapping("refresh-token")
     ResponseEntity<Object> refreshToken(@RequestBody @Valid RefreshToken refreshToken){
         System.out.println("AuthController -> refreshToken : Passando pelo refreshToken");
-        RefreshTokenResponse authToken = this.tokenService.validarJWT(refreshToken, AUTH_TOKEN);
-        return authToken != null ? ResponseEntity.ok().body("Realizando sessão." + authToken) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sessão não realizada.");
+        RefreshTokenResponse authToken = this.tokenService.validarJWT(refreshToken);
+        return authToken != null ? ResponseEntity.ok().body(authToken) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("logar")

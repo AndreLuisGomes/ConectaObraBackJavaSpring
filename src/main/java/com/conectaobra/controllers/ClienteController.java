@@ -38,10 +38,10 @@ public class ClienteController {
     @PostMapping
     public ResponseEntity<Cliente> salvarCliente(@RequestBody @Valid ClienteDTO clienteDTO){
         if(!clienteService.nomeClienteValido(clienteDTO.nome().trim())){
-            throw new NomeClienteEmUsoException("Nome do Cliente já está em uso!");
+            throw new NomeClienteEmUsoException("Nome do cliente já está em uso!");
         }
         if(!clienteService.contatoClienteValido(clienteDTO.contato().trim())){
-            throw new ContatoClienteEmUsoException("Contato do Cliente já está em uso!");
+            throw new ContatoClienteEmUsoException("Contato do cliente já está em uso!");
         }
         Cliente cliente = clienteDTO.mapearParaCliente();
         clienteService.salvarCliente(cliente);
